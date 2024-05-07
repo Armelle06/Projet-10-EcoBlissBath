@@ -1,40 +1,22 @@
-describe("Acces panier/ Order sans authorisation( test1 V1)", () => {
+describe("TEST 1_Acces panier/ Order sans authorisation (Test 1 v1)", () => {
   it(" page 401 error ", () => {
     cy.request({
-      url: `${Cypress.env("apiURL")}/orders`,
+      url: `${Cypress.env("apiUrl")}/orders`,
       headers: {
         // En-tête Authorization vide pour spécifier que l'utilisateur n'est pas connecté
         Authorization: "", //
       },
-      failOnStatusCode: false, // Permet de ne pas échouer le test si la requête retourne une erreur
+      failOnStatusCode: false, // Permet de ne pas échouer si la reponse n' est pas 200
     }).then((response) => {
-      expect(response.status).to.eq(401); //403 erreur
+      expect(response.status).to.eq(401);
     });
   });
 });
 
 ////TEST KO ... attendu 200 mais la reponse est 405!!!!! (capture ecran le 18/04/24 15h:07)
-
-describe("Ajout d'un produit disponible au panier", () => {
-  it("retourne un code de statut 200 après avoir ajouté un produit au panier", () => {
-    // Envoyer une requête POST à l'endpoint d'ajout au panier avec les détails du produit
-    cy.request({
-      method: "POST",
-      url: "http://localhost:8081/orders/add",
-      body: {
-        productId: "7", // l'ID du produit
-        quantity: 1, // La quantité du produit à ajouter au panier
-      },
-      failOnStatusCode: false, // Ne pas échouer le test si le code de statut n'est pas 200
-    }).then((response) => {
-      // Vérifier que la réponse contient un code de statut 200
-      expect(response.status).to.eq(200);
-    });
-  });
-});
 // avec connexion//
-describe("Ajout d'un produit disponible au panier", () => {
-  it("retourne un code de statut 200 après avoir ajouté un produit au panier", () => {
+describe("TEST 2_Ajout d'un produit disponible au panier", () => {
+  it("Statut 200 après avoir ajouté un produit au panier", () => {
     // Se connecter pour obtenir un jeton d'authentification
     cy.request({
       method: "POST",
@@ -52,10 +34,10 @@ describe("Ajout d'un produit disponible au panier", () => {
 
       // Envoyer une requête POST à l'endpoint d'ajout au panier avec les détails du produit
       cy.request({
-        method: "POST",
-        url: "http://localhost:8081/orders/add",
+        method: "PUT",
+        url: `${Cypress.env("apiUrl")}/orders/add`,
         body: {
-          productId: "7", // l'ID du produit
+          product: "7", // l'ID du produit
           quantity: 1, // La quantité du produit à ajouter au panier
         },
         headers: {
@@ -64,8 +46,9 @@ describe("Ajout d'un produit disponible au panier", () => {
         failOnStatusCode: false, // Ne pas échouer le test si le code de statut n'est pas 200
       }).then((response) => {
         // Vérifier que la réponse contient un code de statut 200
-        expect(response.status).to.eq(200);
+        expect(response.status).to.eq(200); // erreur 405 a la place
       });
     });
   });
 });
+// ligne 49 retourne un 405 au lieu d un 200

@@ -1,28 +1,16 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+//commands pour ne pas repeter le selecteur data-cy dans le HTML
 Cypress.Commands.add("getBySel", (selector, ...args) => {
-  return cy.get(`[data-cy=${selector}]`, ...args);
+  return cy.get(`[data-cy= ${selector}]`, ...args);
+});
+
+// commands login pour une connection sans a avoir a exporter ni importer  le dossier
+Cypress.Commands.add("login", () => {
+  const username = Cypress.env("username");
+  const password = Cypress.env("password");
+  cy.visit("");
+  cy.getBySel("nav-link-login").click();
+  cy.getBySel("login-input-username").type(username);
+  cy.getBySel("login-input-password").type(password);
+  cy.getBySel("login-submit").click();
+  cy.contains("Mon panier").should("be.visible");
 });
