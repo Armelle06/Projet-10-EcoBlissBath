@@ -3,7 +3,7 @@ describe("Test api/login", () => {
     // Envoyer une requête POST au endpoint de login avec des identifiants incorrects
     cy.request({
       method: "POST",
-      url: "http://localhost:8081/login",
+      url: `${Cypress.env("apiUrl")}/login`,
       body: {
         username: "utilisateur_inconnu",
         password: "mot_de_passe_incorrect",
@@ -19,7 +19,7 @@ describe("Test api/login", () => {
     // Envoyer une requête POST au endpoint de login avec des identifiants corrects
     cy.request({
       method: "POST",
-      url: "http://localhost:8081/login",
+      url: `${Cypress.env("apiUrl")}/login`,
       body: {
         username: "test2@test.fr",
         password: "testtest",

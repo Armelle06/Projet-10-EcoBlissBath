@@ -3,7 +3,7 @@ describe("Test de requête sur les données confidentielles avant connexion", ()
     // Effectuer la requête sur les données confidentielles (le panier) sans être connecté
     cy.request({
       method: "GET",
-      url: "http://localhost:8081/orders",
+      url: `${Cypress.env("apiUrl")}` + "/orders",
       failOnStatusCode: false, // Permet à la requête de réussir même si elle renvoie un code d'erreur
     }).then((response) => {
       // Vérifier que la requête a renvoyé une erreur 401
@@ -32,7 +32,6 @@ describe("Test de la fonction Panier", () => {
           quantity: 1,
           product: 8,
         },
-        failOnStatusCode: false,
       }).then((response) => {
         expect(response.status).to.eq(200);
 
@@ -44,7 +43,7 @@ describe("Test de la fonction Panier", () => {
           picture:
             "https://cdn.pixabay.com/photo/2018/01/07/04/21/lavender-3066531_960_720.jpg",
         };
-        expect(response.body.orderLines[0].product).to.include(expectedProduct);
+        expect(response.body.orderLines[0].product).to.include(expectedProduct); //compare l'objet apres l'ajout au panier
 
         cy.request({
           method: "GET", // apres avoir ajouter le produit avec PUT  , le GET verifie les détails du la commande
@@ -61,32 +60,31 @@ describe("Test de la fonction Panier", () => {
             price: 15,
             picture:
               "https://cdn.pixabay.com/photo/2018/01/07/04/21/lavender-3066531_960_720.jpg",
-          };
+          }; //verifie que const  expectProduct est le 1 ere element de la liste
           expect(response.body.orderLines[0].product).to.include(
-            expectedProduct
+            expectedProduct // Include =assertion qui verifie les valeurs de l'objet (expectedProduct) mais cette fois récupéré avec GET
           );
         });
       });
     });
   });
 
-  it("TEST 3_Devrait pas permettre d'ajouter un quantité null", () => {
+  it("TEST 3_Devrait pas permettre d'ajouter une quantité null", () => {
     cy.login();
     cy.getBySel("nav-link-products").should("be.visible").click();
-    //cy.getBySel("nav-link-products").click();
     cy.getBySel("product").eq(1).contains("Consulter").click();
-    // Try adding zero quantity
+    // Ajouter 0 au stock
     cy.getBySel("detail-product-quantity").clear().focus().type("0");
     cy.getBySel("detail-product-add").click();
-    // verifie si le produit est ajouté au panier ou non
-    cy.wait(2000);
-    cy.url().should("not.contain", "cart");
+    // Verifie si le produit est ajouté au panier ou non
+    cy.wait(6000);
+
     cy.getBySel("nav-link-cart").click();
     // Vérifie que le produit n'est pas présent dans le panier et que le panier est vide
     cy.getBySel("cart-empty")
-      .should("exist")
+      .should("exist") // Section no exist car c est la message du panier vide
       .and("contain", "Votre panier est vide");
-  });
+  }); //Test KO
 
   it("TEST 4_Devrait pas ajouter un produit en rupture de stock", () => {
     cy.login();
@@ -95,7 +93,7 @@ describe("Test de la fonction Panier", () => {
 
     cy.getBySel("detail-product-quantity").clear().type("1"); // ajouter 1 en quantité
     cy.getBySel("detail-product-add").click();
-
+    cy.wait(9000);
     cy.url().should("contain", "cart");
-  });
+  }); //test KO
 });

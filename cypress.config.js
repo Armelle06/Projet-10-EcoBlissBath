@@ -8,9 +8,7 @@ module.exports = defineConfig({
     password: "testtest",
   },
   e2e: {
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
+    setupNodeEvents(on, config) {},
     baseUrl: "http://localhost:8080",
   },
 });

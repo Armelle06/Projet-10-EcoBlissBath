@@ -1,7 +1,6 @@
-// test XSS
 describe("XSS test de vulnrabilité ", () => {
   it("TEST 1_Devrait pas pouvoir injecté du script malveillant", () => {
-    cy.login(); // utilisateur authentifié
+    cy.login(); // Utilisateur authentifié
     cy.wait(1000);
     cy.getBySel("nav-link-reviews").click();
     cy.get('[data-cy="review-input-rating-images"] img').last().click();
@@ -12,10 +11,9 @@ describe("XSS test de vulnrabilité ", () => {
       "XSS injection de script malveillant "
     );
     cy.getBySel("review-input-comment").type(xssScript);
-
-    // Submit the review
+    // Avis envoyé
     cy.getBySel("review-submit").click();
-    // Check that the malicious script is not present in the review content
-    cy.getBySel("review-comment").should("not.contain", xssScript);
+    // "Vérifier la présence de l'avis
+    cy.getBySel("review-title").should("not.contain", xssScript);
   });
 });

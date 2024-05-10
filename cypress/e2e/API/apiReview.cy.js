@@ -35,8 +35,7 @@ describe("Ajouter un avis ", () => {
     });
   });
 
-  // ajout d avis sans etre authentifié peux apporter des faux avis / diffamatoires// test exploratoire!!n a pas ete demandé
-
+  // Ajout d'avis sans etre authentifié peux apporter des faux avis / diffamatoires// test exploratoire!!
   it("TEST 3_Ajouter un avis sans authentification", () => {
     cy.request({
       method: "POST",

@@ -15,7 +15,7 @@ describe("Test Panier", () => {
         },
       }).then((productResponse) => {
         // Vérifiez si le produit est en stock
-        if (productResponse.body.stock > 0) {
+        if (productResponse.body.availableStock > 0) {
           cy.request({
             method: "PUT", //anomalie detectée dans le test manuel car ecrit POST
             url: apiUrl + "/orders/add",
@@ -42,8 +42,8 @@ describe("Test Panier", () => {
           cy.visit("/product/4"); // visit l article id4
           // Vérifie que le stock a été réduit du nombre de produits ajoutés au panier
           cy.get("detail-product-stock").should(
-            "have.text",
-            productResponse.body.stock - 1
+            "have.text", // C'est un modificateur qui indique à Cypress de vérifier le texte de l'élément sélectionné.
+            productResponse.body.availableStock - 1
           );
         } else {
           //apparition du log , le produit s ajoute malgres sont manque de stock
@@ -56,21 +56,21 @@ describe("Test Panier", () => {
   });
 
   it("TEST 2_ Ajouter un produit négatif (-1)", () => {
-    cy.login(); //sur la page du site
+    cy.login(); //Sur la page du site connecté
 
     //Clicker sur le produit (3 eme bouton Consulter)
     cy.getBySel("nav-link-products").click();
     cy.get("button").eq(2).should("contain", "Consulter").click();
 
-    //ajoutez au panier une quantité négative
+    //Ajoutez au panier une quantité négative
     cy.getBySel("detail-product-quantity").click();
     cy.getBySel("detail-product-quantity").clear();
     cy.getBySel("detail-product-quantity").type("-1");
     cy.getBySel("detail-product-add").click();
 
-    //verification du panier , le produit ne doit pas être présent
+    //Vérification du panier , le produit ne doit pas être présent
     cy.getBySel("nav-link-cart").click();
-    cy.contains("Poussière de lune").should("not.exist");
+    cy.contains("Poussière de lune").should("not.exist"); // L'article n'apparait pas
   });
 
   // TEST KO
@@ -90,7 +90,7 @@ describe("Test Panier", () => {
     // Vérifiez que le produit n'est pas ajouté au panier
     cy.getBySel("nav-link-cart").click();
     cy.wait(10000);
-    cy.contains("Poussière de lune").should("not.exist"); //test en echec le contains "exist"
+    cy.contains("Poussière de lune").should("not.exist"); //Test  KO en echec le contains "exist"
   });
   it("TEST 4_Vérifier la liste des produits dans le panier (Test 1/GET v1)", () => {
     cy.request("POST", `${Cypress.env("apiUrl")}` + "/login", {
@@ -108,7 +108,8 @@ describe("Test Panier", () => {
         // Vérifiez si le produit est en stock
         if (productResponse.body.availableStock > 0) {
           cy.request({
-            method: "PUT", //anomalie detecté dans les test manuel car ecrit POST
+            // Simule un ajout au panier
+            method: "PUT", // Anomalie detecté dans les test manuel car ecrit POST
             url: apiUrl + "/orders/add",
             headers: {
               Authorization: "Bearer " + token,
@@ -118,15 +119,14 @@ describe("Test Panier", () => {
               product: 4,
             },
           }).then((response) => {
-            expect(response.status).to.eq(200); //anomalie detecté car pas de stock sur cette articles
-            expect(response.body).to.be.an("array"); // Assurez-vous que la réponse est un tableau
+            expect(response.status).to.eq(200); // Anomalie detecté car pas de stock sur cette articles
+            expect(response.body).to.be.an("array"); // la réponse est un tableau
 
             // Parcours chaque produit dans la liste et vérifiez ses détails
             response.body.forEach((product) => {
               // Vérifiez les détails du produit, par exemple :
-              expect(product).to.have.property("name"); // Assurez-vous que le produit a un nom
-              expect(product).to.have.property("price"); // Assurez-vous que le produit a un prix
-              // Vous pouvez ajouter d'autres vérifications en fonction de vos besoins
+              expect(product).to.have.property("name"); //  Valeur attendu
+              expect(product).to.have.property("price");
             });
           });
         }

@@ -6,7 +6,6 @@ const fakeEmail = faker.internet.email();
 const fakePassword = faker.internet.password({ length: 20 });
 
 // KO test responsive  sur iphone 6 apres avoir verifier descktock
-// screeshort le 23/04 17h19
 
 describe("login en iphone6", () => {
   it("TEST 1_Barre nav-link-cart no visible", () => {
@@ -20,9 +19,9 @@ describe("login en iphone6", () => {
     cy.getBySel("register-input-password-confirm").type(fakePassword);
     cy.getBySel("register-submit").click();
     cy.getBySel("nav-link-cart")
-      .should("be.visible") // header nav-link-cart pas visible
+      .should("be.visible") // Header "nav-link-cart" pas visible Test KO
       .should("contain", "Mon panier");
-    cy.get('[data-cy="nav-link-logout"]')
+    cy.getBySel("nav-link-logout")
       .should("be.visible")
       .should("contain", "Déconnexion");
   });

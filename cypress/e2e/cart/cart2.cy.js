@@ -32,7 +32,6 @@ describe("Test Panier", () => {
           }).then((response) => {
             expect(response.status).to.eq(200); // Vérifie que l'ajout au panier s'est bien déroulé
           });
-
           // Vérifie que le stock a été réduit du nombre de produits ajoutés au panier
           cy.request({
             method: "GET",

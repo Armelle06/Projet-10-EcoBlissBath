@@ -6,21 +6,19 @@ describe("TEST 1_Acces panier/ Order sans authorisation (Test 1 v1)", () => {
         // En-tête Authorization vide pour spécifier que l'utilisateur n'est pas connecté
         Authorization: "", //
       },
-      failOnStatusCode: false, // Permet de ne pas échouer si la reponse n' est pas 200
+      failOnStatusCode: false, // Permet de ne pas échouer si la reponse n'est pas 200
     }).then((response) => {
       expect(response.status).to.eq(401);
     });
   });
 });
 
-////TEST KO ... attendu 200 mais la reponse est 405!!!!! (capture ecran le 18/04/24 15h:07)
-// avec connexion//
 describe("TEST 2_Ajout d'un produit disponible au panier", () => {
   it("Statut 200 après avoir ajouté un produit au panier", () => {
     // Se connecter pour obtenir un jeton d'authentification
     cy.request({
       method: "POST",
-      url: "http://localhost:8081/login",
+      url: `${Cypress.env("apiUrl")}/login`,
       body: {
         username: "test2@test.fr",
         password: "testtest",
@@ -43,12 +41,10 @@ describe("TEST 2_Ajout d'un produit disponible au panier", () => {
         headers: {
           Authorization: `Bearer ${token}`, // Inclure le jeton d'authentification dans les en-têtes
         },
-        failOnStatusCode: false, // Ne pas échouer le test si le code de statut n'est pas 200
       }).then((response) => {
         // Vérifier que la réponse contient un code de statut 200
-        expect(response.status).to.eq(200); // erreur 405 a la place
+        expect(response.status).to.eq(200);
       });
     });
   });
 });
-// ligne 49 retourne un 405 au lieu d un 200
