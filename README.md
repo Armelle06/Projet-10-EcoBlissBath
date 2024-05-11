@@ -16,7 +16,7 @@ git clone https://github.com/OpenClassrooms-Student-Center/TesteurLogiciel_Autom
 
 2. Lancer de Backend:
 
--Ouvrez unterminal de commande.  
+-Ouvrez un terminal de commande.  
 -Accédez au répertoire du projet cloné.  
 -Tapez la commande suivante pour lancer le backend :
 
@@ -43,7 +43,7 @@ npm start
    -Tapez la commande suivante pour installer Cypress :
 
 ```
-npm install cypress --save-dev*
+npm install cypress --save-dev
 ```
 
 2. Ouvrir Cypress:
