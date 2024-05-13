@@ -13,9 +13,7 @@ describe("XSS test de vulnérabilité ", () => {
     cy.getBySel("review-input-comment").type(xssScript);
     // Avis envoyé
     cy.getBySel("review-submit").click();
-    // Vérifier la présence de l'avis
-    // Vérifier la présence de l'avis
-    cy.getBySel("review-comment").should("contain", xssScript);
-    cy.wait(2000);
+    // "Vérifier la présence de l'avis
+    cy.getBySel("review-title").should("contain", xssScript);
   });
 });
