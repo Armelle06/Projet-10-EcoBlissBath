@@ -12,9 +12,8 @@ describe("Test Panier", () => {
         method: "GET",
         url: `${apiUrl}/products/4`, // exemple ID '4'
         headers: {
-          // Vous avez oublié cette ligne
           Authorization: `Bearer ${token}`,
-        }, // Et cette parenthèse fermante est en trop
+        },
       }).then((productResponse) => {
         const stockAvailable = productResponse.body.availableStock;
         cy.log("Stock disponible :", stockAvailable);
